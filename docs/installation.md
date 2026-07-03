@@ -16,3 +16,13 @@
 ## Add the integration
 
 Settings → Devices & Services → **Add Integration** → **Start Time**.
+
+## Removal
+
+1. Settings → Devices & Services → **Start Time** → entry menu → **Delete**.
+2. In HACS, open **Start Time** → **Remove** (manual install: delete
+   `custom_components/start_time/`).
+3. Restart Home Assistant.
+
+No leftover data remains: the integration has no options, no external
+connections, and its stored state is removed with the entity.

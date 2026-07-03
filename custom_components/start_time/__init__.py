@@ -1,35 +1,37 @@
-from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
+"""The Start Time integration.
+
+Exposes the Home Assistant boot duration as a sensor, with per-integration
+setup times as attributes. Config-entry only; a single instance is allowed.
+"""
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING, Final
+
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers import config_validation as cv
-from homeassistant.helpers.typing import ConfigType
 
-from .sensor import DOMAIN, StartTime
+from .boot import BootTimeMonitor
 
-CONFIG_SCHEMA = cv.empty_config_schema(DOMAIN)
+if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
 
+PLATFORMS: Final = [Platform.SENSOR]
 
-async def async_setup(hass: HomeAssistant, hass_config: ConfigType) -> bool:
-    """Set up the Start Time component."""
-    hass.data[DOMAIN] = StartTime()
-
-    if DOMAIN in hass_config and not hass.config_entries.async_entries(DOMAIN):
-        hass.async_create_task(
-            hass.config_entries.flow.async_init(
-                DOMAIN, context={"source": SOURCE_IMPORT}
-            )
-        )
-    return True
+type StartTimeConfigEntry = ConfigEntry[BootTimeMonitor]
 
 
-async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
+async def async_setup_entry(hass: HomeAssistant, entry: StartTimeConfigEntry) -> bool:
     """Set up Start Time from a config entry."""
-    await hass.config_entries.async_forward_entry_setups(
-        config_entry, [Platform.SENSOR]
-    )
+    monitor = BootTimeMonitor()
+    monitor.attach()
+    entry.async_on_unload(monitor.detach)
+    entry.runtime_data = monitor
+
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_unload_entry(hass: HomeAssistant, entry: StartTimeConfigEntry) -> bool:
     """Unload a config entry."""
-    return await hass.config_entries.async_unload_platforms(entry, [Platform.SENSOR])
+    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)

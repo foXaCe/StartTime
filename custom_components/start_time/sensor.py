@@ -1,65 +1,67 @@
-import logging
-from datetime import timedelta
+"""Sensor platform for the Start Time integration."""
 
-from homeassistant.core import HomeAssistant
+from __future__ import annotations
+
+import logging
+from typing import TYPE_CHECKING
+
+from homeassistant.core import callback
 from homeassistant.helpers.entity import Entity
+from homeassistant.setup import async_get_setup_timings
+
+from .const import DOMAIN
+
+if TYPE_CHECKING:
+    from homeassistant.core import HomeAssistant
+    from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+
+    from . import StartTimeConfigEntry
 
 _LOGGER = logging.getLogger(__name__)
 
-DOMAIN = "start_time"
+
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: StartTimeConfigEntry,
+    async_add_entities: AddConfigEntryEntitiesCallback,
+) -> None:
+    """Set up the Start Time sensor from a config entry."""
+    async_add_entities([StartTimeSensor(entry)])
 
 
-async def async_setup_entry(hass: HomeAssistant, entry, async_add_entities):
-    sensor = hass.data[DOMAIN]
-    async_add_entities([sensor])
+class StartTimeSensor(Entity):
+    """Sensor exposing the Home Assistant boot duration in seconds."""
 
+    _attr_icon = "mdi:home-assistant"
+    _attr_name = "Start Time"
+    _attr_should_poll = False
+    _attr_unique_id = DOMAIN
+    _attr_unit_of_measurement = "seconds"
 
-class StartTime(Entity):
-    def __init__(self):
-        self._attr_icon = "mdi:home-assistant"
-        self._attr_name = "Start Time"
-        self._attr_should_poll = False
-        self._attr_unit_of_measurement = "seconds"
-        self._attr_unique_id = DOMAIN
+    def __init__(self, entry: StartTimeConfigEntry) -> None:
+        """Initialize the sensor bound to the boot time monitor."""
+        self._monitor = entry.runtime_data
 
-        self.add_logger("homeassistant.bootstrap")
+    async def async_added_to_hass(self) -> None:
+        """Subscribe to boot time capture; apply it if already available."""
+        self.async_on_remove(self._monitor.add_listener(self._handle_boot_time))
+        if self._monitor.boot_time is not None:
+            self._apply_boot_time(self._monitor.boot_time)
 
-    def add_logger(self, name: str):
-        logger = logging.getLogger(name)
-        real_info = logger.info
-
-        def monkey_info(msg: str, *args):
-            # https://github.com/home-assistant/core/issues/112464
-            try:
-                if msg.startswith("Home Assistant initialized"):
-                    self.internal_update(args[0])
-            except Exception as e:
-                _LOGGER.warning("update error", exc_info=e)
-
-            real_info(msg, *args)
-
-        logger.info = monkey_info  # type: ignore[assignment]
-
-    def internal_update(self, state: float):
-        setup_time: dict = self.hass.data.get("setup_time")
-        if setup_time:
-            extra = {}  # protect original dict from changing
-
-            for k, v in setup_time.items():
-                if isinstance(v, dict):  # Hass 2024.4
-                    value = sum(j for i in v.values() for j in i.values())
-                    extra[k] = round(value, 2)
-                elif isinstance(v, float):  # Hass 2024.3
-                    extra[k] = round(v, 2)
-                elif isinstance(v, timedelta):  # before Hass 2024.3
-                    extra[k] = round(v.total_seconds(), 2)
-                else:
-                    continue
-
-            self._attr_extra_state_attributes = dict(
-                sorted(extra.items(), key=lambda kv: kv[1], reverse=True)
-            )
-
-        self._attr_state = round(state, 2)
-
+    @callback
+    def _handle_boot_time(self, boot_time: float) -> None:
+        """Handle the boot time captured by the monitor."""
+        self._apply_boot_time(boot_time)
         self.schedule_update_ha_state()
+
+    def _apply_boot_time(self, boot_time: float) -> None:
+        """Set the sensor state and per-integration setup time attributes."""
+        self._attr_state = boot_time
+        timings = async_get_setup_timings(self.hass)
+        self._attr_extra_state_attributes = dict(
+            sorted(
+                ((domain, round(seconds, 2)) for domain, seconds in timings.items()),
+                key=lambda item: item[1],
+                reverse=True,
+            )
+        )

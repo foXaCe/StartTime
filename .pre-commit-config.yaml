@@ -1,5 +1,11 @@
 # Runner: prek (Rust drop-in for pre-commit) — `pipx install prek && prek install`
 # Fully compatible with pre-commit Python: `pipx install pre-commit` also works.
+ci:
+  # mypy is a language: system hook (needs the dev environment with
+  # homeassistant installed); pre-commit.ci can't run it — CI's dedicated
+  # type-check job covers it.
+  skip: [mypy]
+
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.20

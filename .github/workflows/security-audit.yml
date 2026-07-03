@@ -28,7 +28,14 @@ jobs:
           python-version: "3.13"
           cache: pip
       - run: pip install pip-audit
-      - run: python -m pip_audit -r requirements_dev.txt -r requirements_test.txt
+      # The integration ships zero runtime dependencies. Audit only the dev
+      # tooling this repo controls directly: pytest-homeassistant-custom-
+      # component pins Home Assistant core's full dependency tree, which is
+      # audited (and fixed) upstream by Home Assistant itself.
+      - run: |
+          grep -hv -e "pytest-homeassistant-custom-component" -e "^-r" \
+            requirements_dev.txt requirements_test.txt > /tmp/audit-requirements.txt
+          python -m pip_audit -r /tmp/audit-requirements.txt
 
   dependency-review:
     name: Dependency review

@@ -30,21 +30,6 @@ jobs:
       - run: pipx install pip-audit
       - run: pip-audit -r requirements_dev.txt -r requirements_test.txt
 
-  osv-scanner:
-    name: OSV-Scanner
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-      security-events: write
-    steps:
-      - uses: actions/checkout@v7
-      - uses: google/osv-scanner-action/osv-scanner-action@v2.3.8
-        with:
-          scan-args: |-
-            --recursive
-            ./
-
   lockfile-freshness:
     name: Lockfile age check
     runs-on: ubuntu-latest

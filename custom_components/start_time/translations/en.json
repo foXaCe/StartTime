@@ -1,6 +1,10 @@
 {
   "config": {
-    "step": {},
+    "step": {
+      "user": {
+        "description": "Set up the Start Time sensor. There is nothing to configure."
+      }
+    },
     "abort": {
       "single_instance_allowed": "Already configured. Only a single configuration possible."
     }

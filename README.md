@@ -70,6 +70,59 @@ integration surfaces the same value as a sensor:
 This is useful for debugging startup performance on slow hardware such as a
 Raspberry Pi.
 
+## Example automations
+
+Get notified when Home Assistant took unusually long to start:
+
+```yaml
+automation:
+  - alias: "Notify on slow startup"
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.start_time
+        above: 60
+    actions:
+      - action: notify.persistent_notification
+        data:
+          title: "Slow startup"
+          message: >-
+            Home Assistant took {{ states('sensor.start_time') }} seconds
+            to start.
+```
+
+The per-integration setup durations are available as attributes, so you can
+watch a specific integration:
+
+```yaml
+{{ state_attr('sensor.start_time', 'recorder') }}
+```
+
+## Known limitations
+
+- The value is captured **once per startup**, when Home Assistant logs that it
+  has finished initializing. It never changes until the next restart.
+- When the integration is added to an already-running instance, the sensor
+  shows the value restored from the previous boot (or stays unknown on the
+  very first install) until Home Assistant is restarted.
+- The capture relies on the `Home Assistant initialized in X.XXs` log record
+  emitted by `homeassistant.bootstrap` — Home Assistant exposes this value
+  through no public API. The test suite guards the message format on every
+  supported release.
+- Per-integration attributes are intentionally **not recorded** in the
+  history database (they change on every boot and would bloat the recorder);
+  they are always available live and in the integration diagnostics.
+
+## Removal
+
+1. Go to **Settings → Devices & Services**, open **Start Time** and choose
+   **Delete** from the entry menu.
+2. Remove the files: in HACS, open **Start Time** and choose **Remove**
+   (manual install: delete the `custom_components/start_time/` folder).
+3. Restart Home Assistant.
+
+The integration keeps no leftover data: no options, no external connections,
+and its stored state is removed with the entity.
+
 ## Contributing
 
 Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).

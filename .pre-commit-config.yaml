@@ -1,5 +1,11 @@
 # Runner: prek (Rust drop-in for pre-commit) — `pipx install prek && prek install`
 # Fully compatible with pre-commit Python: `pipx install pre-commit` also works.
+ci:
+  # mypy is a language: system hook (needs the dev environment with
+  # homeassistant installed); pre-commit.ci can't run it — CI's dedicated
+  # type-check job covers it.
+  skip: [mypy]
+
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.20
@@ -22,8 +28,15 @@ repos:
       - id: mixed-line-ending
         args: [--fix=lf]
 
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.1.0
+  # mypy strict needs the real homeassistant package for type resolution, so
+  # it runs from the dev environment (requirements_dev.txt) like HA core does,
+  # instead of the isolated mirrors-mypy hook (where HA imports resolve to Any).
+  - repo: local
     hooks:
       - id: mypy
+        name: mypy (strict)
+        entry: mypy custom_components/start_time
+        language: system
+        types: [python]
         files: ^custom_components/
+        pass_filenames: false

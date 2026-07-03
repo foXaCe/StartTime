@@ -26,6 +26,8 @@ if TYPE_CHECKING:
 
 _LOGGER = logging.getLogger(__name__)
 
+PARALLEL_UPDATES = 0
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -49,8 +51,10 @@ class StartTimeSensor(RestoreSensor):
 
     _attr_device_class = SensorDeviceClass.DURATION
     _attr_has_entity_name = True
-    _attr_icon = "mdi:home-assistant"
     _attr_name = None
+    # Icon provided through icons.json (icon translations); the explicit
+    # _attr_name = None keeps the device name as the entity name.
+    _attr_translation_key = DOMAIN
     _attr_native_unit_of_measurement = UnitOfTime.SECONDS
     _attr_should_poll = False
     _attr_state_class = SensorStateClass.MEASUREMENT

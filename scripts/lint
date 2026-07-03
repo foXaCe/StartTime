@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+ruff check .
+ruff format --check .
+mypy custom_components/start_time

@@ -1,14 +1,13 @@
 {
   "domain": "start_time",
   "name": "Start Time",
-  "codeowners": [
-    "@AlexxIT"
-  ],
+  "codeowners": ["@foXaCe"],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://github.com/AlexxIT/StartTime",
+  "documentation": "https://github.com/foXaCe/StartTime",
+  "integration_type": "helper",
   "iot_class": "calculated",
-  "issue_tracker": "https://github.com/AlexxIT/StartTime/issues",
+  "issue_tracker": "https://github.com/foXaCe/StartTime/issues",
   "requirements": [],
   "version": "1.1.8"
 }

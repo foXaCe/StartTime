@@ -1,25 +1,26 @@
-name: HACS
+name: CodeQL
 
 on:
   push:
     branches: [main]
   pull_request:
     branches: [main]
-  workflow_dispatch:
   schedule:
     - cron: "0 6 * * 1"
 
 permissions:
+  actions: read
   contents: read
+  security-events: write
 
 jobs:
-  validate:
-    name: HACS validation
+  analyze:
+    name: CodeQL
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
-      - uses: hacs/action@main
+      - uses: github/codeql-action/init@v4
         with:
-          category: integration
-          ignore: brands
+          languages: python
+      - uses: github/codeql-action/analyze@v4

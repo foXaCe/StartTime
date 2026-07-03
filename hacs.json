@@ -1,4 +1,5 @@
 {
-    "name": "Start Time",
-    "render_readme": true
+  "name": "Start Time",
+  "render_readme": true,
+  "homeassistant": "2024.4.0"
 }

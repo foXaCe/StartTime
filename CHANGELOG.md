@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0](https://github.com/foXaCe/StartTime/compare/v1.2.0...v1.3.0) (2026-07-03)
+
+
+### Added
+
+* reach Quality Scale Platinum (parallel-updates, icon translations, docs, strict typing) ([9a19e1c](https://github.com/foXaCe/StartTime/commit/9a19e1c09c56536acb3b02da260448fdfd0a8a38))
+
 ## [Unreleased]
 
 ## [1.2.0] - 2026-07-03

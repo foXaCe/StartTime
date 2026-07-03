@@ -1,11 +1,15 @@
 from homeassistant.config_entries import SOURCE_IMPORT, ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.typing import ConfigType
 
 from .sensor import DOMAIN, StartTime
 
+CONFIG_SCHEMA = cv.empty_config_schema(DOMAIN)
 
-async def async_setup(hass: HomeAssistant, hass_config: dict):
+
+async def async_setup(hass: HomeAssistant, hass_config: ConfigType) -> bool:
     """Set up the Start Time component."""
     hass.data[DOMAIN] = StartTime()
 

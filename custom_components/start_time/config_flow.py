@@ -9,7 +9,7 @@ from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from .const import DOMAIN
 
 
-class StartTimeConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
+class StartTimeConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle the Start Time config flow (nothing to configure)."""
 
     VERSION = 1

@@ -63,6 +63,11 @@ def test_translations_present() -> None:
         _load(path)  # must be valid JSON
 
 
+def test_icon_translations_present() -> None:
+    icons = _load(INTEGRATION / "icons.json")
+    assert icons["entity"]["sensor"]["start_time"]["default"].startswith("mdi:")
+
+
 def test_hacs_json_valid() -> None:
     hacs = _load(ROOT / "hacs.json")
     assert hacs["name"] == "Start Time"

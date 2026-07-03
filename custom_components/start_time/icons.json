@@ -1,0 +1,9 @@
+{
+  "entity": {
+    "sensor": {
+      "start_time": {
+        "default": "mdi:home-assistant"
+      }
+    }
+  }
+}

@@ -27,8 +27,8 @@ jobs:
         with:
           python-version: "3.13"
           cache: pip
-      - run: pipx install pip-audit
-      - run: pip-audit -r requirements_dev.txt -r requirements_test.txt
+      - run: pip install pip-audit
+      - run: python -m pip_audit -r requirements_dev.txt -r requirements_test.txt
 
   dependency-review:
     name: Dependency review

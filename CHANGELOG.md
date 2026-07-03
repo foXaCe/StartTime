@@ -5,6 +5,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0](https://github.com/foXaCe/StartTime/compare/start_time-v1.2.0...start_time-v1.3.0) (2026-07-03)
+
+
+### Added
+
+* diagnostics support & config flow polish ([244ef03](https://github.com/foXaCe/StartTime/commit/244ef038f8a3452c7e586a39e10fb606bd1a871a))
+* modernize sensor entity — RestoreSensor, duration device class, service device ([fed1da6](https://github.com/foXaCe/StartTime/commit/fed1da63eaee21ec30292c266ce0c5e86cb932cb))
+
+
+### Changed
+
+* detach boot capture filter as soon as the boot time is captured ([7548c88](https://github.com/foXaCe/StartTime/commit/7548c8877e5a7ade38b5c4ddbe9bd573a4e3fbe1))
+* modern entry lifecycle — runtime_data, removable logging.Filter boot capture ([855ef03](https://github.com/foXaCe/StartTime/commit/855ef037cd83765a7827796d31f3b58e78ac5326))
+* structural pass — modular layout verified, no dead code, no import cycles ([43ce668](https://github.com/foXaCe/StartTime/commit/43ce668304100a050dbf7d724aa2217e5b9f5175))
+
+
+### Documentation
+
+* changelog, architecture & configuration docs for the overhaul ([7161184](https://github.com/foXaCe/StartTime/commit/7161184b4723c87813f2877abe4d6c1800247244))
+
 ## [Unreleased]
 
 ## [1.2.0] - 2026-07-03

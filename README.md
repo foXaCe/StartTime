@@ -63,7 +63,7 @@ clear your browser cache and try again.
 Home Assistant reports its initialization time in the `INFO` logs. This
 integration surfaces the same value as a sensor:
 
-```
+```text
 2020-02-24 17:13:11 INFO (MainThread) [homeassistant.bootstrap] Home Assistant initialized in 25.5s
 ```
 

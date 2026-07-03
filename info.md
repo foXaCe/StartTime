@@ -3,7 +3,7 @@
 Creates a **Start Time** sensor for Home Assistant that reports the boot
 initialization time — the same value Home Assistant logs at startup:
 
-```
+```text
 Home Assistant initialized in 25.5s
 ```
 

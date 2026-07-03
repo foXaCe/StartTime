@@ -44,3 +44,4 @@ disallow_untyped_defs = false
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v --cov=custom_components/start_time --cov-report=term-missing"
+asyncio_mode = "auto"

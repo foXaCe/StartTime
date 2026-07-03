@@ -17,7 +17,5 @@ class StartTimeConfigFlow(ConfigFlow, domain=DOMAIN):  # type: ignore[call-arg]
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
-        """Create the single config entry."""
-        if self._async_current_entries():
-            return self.async_abort(reason="single_instance_allowed")
+        """Create the config entry (single_config_entry guards duplicates)."""
         return self.async_create_entry(title="Start Time", data={})

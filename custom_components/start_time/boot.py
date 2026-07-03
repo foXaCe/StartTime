@@ -53,7 +53,9 @@ class BootTimeMonitor(logging.Filter):
         """Register a listener called on capture; return an unsubscribe callable."""
 
         def _remove() -> None:
-            self._listeners.remove(listener)
+            # Tolerant: detach() may already have cleared the listeners.
+            if listener in self._listeners:
+                self._listeners.remove(listener)
 
         self._listeners.append(listener)
         return _remove

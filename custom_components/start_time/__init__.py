@@ -25,6 +25,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: StartTimeConfigEntry) ->
     """Set up Start Time from a config entry."""
     monitor = BootTimeMonitor()
     monitor.attach()
+
+    def _detach_once_captured(_boot_time: float) -> None:
+        # Zero residual cost: fully detach from the logger as soon as the
+        # boot time is captured. Deferred via call_soon_threadsafe because
+        # the logger's filter list must not be mutated while logging
+        # iterates over it.
+        hass.loop.call_soon_threadsafe(monitor.detach)
+
+    monitor.add_listener(_detach_once_captured)
     entry.async_on_unload(monitor.detach)
     entry.runtime_data = monitor
 

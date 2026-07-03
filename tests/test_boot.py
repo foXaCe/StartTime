@@ -76,6 +76,16 @@ def test_attach_and_detach_manage_logger_filters() -> None:
     assert not monitor._listeners  # noqa: SLF001
 
 
+def test_unsubscribe_after_detach_is_safe() -> None:
+    """Unsubscribing after detach() cleared the listeners must not raise."""
+    monitor = BootTimeMonitor()
+    unsubscribe = monitor.add_listener(lambda _: None)
+    monitor.attach()
+    monitor.detach()
+    unsubscribe()  # listeners already cleared — must be tolerant
+    assert not monitor._listeners  # noqa: SLF001
+
+
 def test_end_to_end_through_real_logging() -> None:
     """A real log call on the bootstrap logger is captured transparently."""
     logger = logging.getLogger(BOOTSTRAP_LOGGER_NAME)

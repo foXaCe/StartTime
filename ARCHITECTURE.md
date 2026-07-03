@@ -9,8 +9,9 @@ Assistant's own boot initialization time as a sensor entity.
 homeassistant.bootstrap logger
         │  "Home Assistant initialized in 25.5s"
         ▼
-BootTimeMonitor (logging.Filter, attached at entry setup,
-        │        detached on unload — never mutates logging behavior)
+BootTimeMonitor (logging.Filter, attached at entry setup, self-detached
+        │        right after capture — and on unload — never mutates
+        │        logging behavior)
         │  captures the float argument, notifies listeners
         ▼
 StartTimeSensor._handle_boot_time()
@@ -45,7 +46,9 @@ sensor.start_time  (native_value = seconds, attributes = per-integration
 
 - **Zero boot cost**: no I/O, no polling, no third-party requirements. The only
   runtime hook is one `logging.Filter` on a logger that emits a handful of
-  records per boot; the filter short-circuits after the first capture.
+  records per boot — and it detaches itself as soon as the capture is done
+  (deferred outside the logging call, since a logger's filter list must not be
+  mutated while logging iterates over it). Zero residual hook after boot.
 - **unique_id stability**: the single entity keeps `unique_id = "start_time"`
   (unchanged since the original implementation — user history and automations
   are preserved).

@@ -52,6 +52,28 @@ async def test_unload_detaches_filter(
     assert _monitor_count() == attached - 1
 
 
+async def test_filter_detaches_itself_after_capture(
+    hass: HomeAssistant, setup_integration: MockConfigEntry
+) -> None:
+    """Once the boot time is captured, the filter fully detaches itself."""
+    attached = _monitor_count()
+
+    logging.getLogger(BOOTSTRAP_LOGGER_NAME).info(
+        "Home Assistant initialized in %.2fs", 8.0
+    )
+    await hass.async_block_till_done()
+
+    assert _monitor_count() == attached - 1  # zero residual hook
+    state = hass.states.get("sensor.start_time")
+    assert state is not None
+    assert float(state.state) == 8.0
+
+    # Unload after self-detach stays clean (detach is idempotent).
+    assert await hass.config_entries.async_unload(setup_integration.entry_id)
+    await hass.async_block_till_done()
+    assert setup_integration.state is ConfigEntryState.NOT_LOADED
+
+
 async def test_reload_does_not_stack_filters(
     hass: HomeAssistant, setup_integration: MockConfigEntry
 ) -> None:

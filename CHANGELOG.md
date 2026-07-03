@@ -7,12 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-07-03
+
 ### Changed
 
 - **Full integration overhaul** to 2026 Home Assistant standards:
   - Boot time capture rewritten as a removable `logging.Filter`
-    (`BootTimeMonitor`) — the previous `logger.info` monkey-patch is gone and
-    the hook is cleanly detached when the config entry is unloaded.
+    (`BootTimeMonitor`) — the previous `logger.info` monkey-patch is gone;
+    the hook detaches itself as soon as the boot time is captured (zero
+    residual cost) and is also cleanly detached on config entry unload.
   - Typed `ConfigEntry.runtime_data` replaces `hass.data[DOMAIN]` (no more
     leak on unload).
   - Setup timings now come from the public
@@ -50,5 +53,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support for Home Assistant 2024.4 setup-time reporting.
 
-[Unreleased]: https://github.com/foXaCe/StartTime/compare/v1.1.8...HEAD
+[Unreleased]: https://github.com/foXaCe/StartTime/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/foXaCe/StartTime/releases/tag/v1.2.0
 [1.1.8]: https://github.com/foXaCe/StartTime/releases/tag/v1.1.8

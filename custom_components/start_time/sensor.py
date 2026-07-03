@@ -38,7 +38,7 @@ class StartTime(Entity):
 
             real_info(msg, *args)
 
-        logger.info = monkey_info
+        logger.info = monkey_info  # type: ignore[assignment]
 
     def internal_update(self, state: float):
         setup_time: dict = self.hass.data.get("setup_time")

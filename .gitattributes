@@ -1,0 +1,12 @@
+# Normalize line endings to LF on checkin
+* text=auto eol=lf
+
+# Binary assets — never modify, never diff as text
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.zip binary
+
+# Python sources
+*.py text diff=python

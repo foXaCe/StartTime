@@ -25,7 +25,7 @@ initialization time as a sensor._
 
 ## Requirements
 
-- Home Assistant **2024.4** or newer
+- Home Assistant **2025.1** or newer
 - Python **3.13** or newer
 
 ## Installation

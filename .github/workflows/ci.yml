@@ -23,7 +23,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          python-version: "3.13"
+          python-version: "3.14"
           cache: pip
       - run: pip install -r requirements_dev.txt
       - run: ruff check .
@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          python-version: "3.13"
+          python-version: "3.14"
           cache: pip
       - run: pip install -r requirements_dev.txt
       - run: mypy custom_components/start_time
